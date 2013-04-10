@@ -1,5 +1,4 @@
 class TodosController < ApplicationController
-  before_filter :load_todos
 
   def index
     @todos = Todo.all
@@ -7,25 +6,19 @@ class TodosController < ApplicationController
 
   def new
     @todo = Todo.new
+    @list = List.find(params[:list_id])
   end
 
   def show
     @todo = Todo.find params[:id]
+    @list = @todo.list
   end
 
   def create
-    list_name = params[:todo].delete(:list_name)
-    list_name = list_name.downcase
-    list_name = list_name.gsub ' ', '-'
-    @todo = Todo.new params[:todo]
+    @list = List.find(params[:list_id])
+    @todo = Todo.new params[:todo].merge(:list => @list)
     if @todo.save
-      @todo.update_attributes :list_name => list_name
-      @todos = Todo.where :list_name => list_name
-      @todos.each do |todo|
-        todo.update_attributes :todo_count => @todos.count
-        todo.save
-      end
-      redirect_to root_url
+      redirect_to list_path(@list)
     else
       render :new
     end
@@ -33,29 +26,19 @@ class TodosController < ApplicationController
 
   def edit
     @todo = Todo.find params[:id]
+    @list = @todo.list
   end
 
   def update
     @todo = Todo.find params[:id]
-    list_name = params[:todo].delete(:list_name)
-    list_name = list_name.downcase
-    list_name = list_name.gsub ' ', '-'
-    if @todo.update_attributes params[:todo]
-      @todo.update_attributes :list_name => list_name
-      @todos = Todo.where :list_name => list_name
-      @todos.each do |todo|
-        todo.update_attributes :todo_count => @todos.count
-        todo.save
-      end
-      redirect_to @todo
+    @list = @todo.list
+    @todo.title = params[:todo][:title]
+    @todo.body = params[:todo][:body]
+    if @todo.save
+      redirect_to list_path(@list)
     else
-      render :edit
+      flash[:notice] = "Error! Todo did not update."
+      redirect_to :edit
     end
-  end
-
-  private
-
-  def load_todos
-    @todos = Todo.all
   end
 end

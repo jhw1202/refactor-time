@@ -1,5 +1,7 @@
 class Todo < ActiveRecord::Base
-  attr_accessible :title, :body, :list_name, :todo_count, :status
+  attr_accessible :title, :body, :list, :status
+
+  belongs_to :list
 
   def incomplete?
     self.status == 0

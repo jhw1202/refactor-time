@@ -1,0 +1,13 @@
+<h2><%= @list.name %></h2>
+
+<ul class="todos">
+  <% @todos.each do |todo| %>
+    <li>
+      <h4><%= link_to todo.title, list_todo_path(@list, todo) %></h4>
+      <p><%= todo.body %></p>
+      <span><%= todo.status %></span>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "Add Todo", new_list_todo_path(@list) %>
