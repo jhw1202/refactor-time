@@ -32,8 +32,7 @@ class TodosController < ApplicationController
   def update
     @todo = Todo.find params[:id]
     @list = @todo.list
-    @todo.title = params[:todo][:title]
-    @todo.body = params[:todo][:body]
+    @todo.update_attributes(params[:todo])
     if @todo.save
       redirect_to list_path(@list)
     else
