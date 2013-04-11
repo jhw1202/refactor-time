@@ -1,0 +1,9 @@
+<%= form_for [@list, @todo] do |f| %>
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+  <%= f.label :body %>
+  <%= f.text_field :body %>
+  <%= f.label :status %>
+  <%= f.collection_select :status, Todo.statuses, :last, :first %>
+  <%= f.submit %>
+<% end %>

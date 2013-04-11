@@ -2,7 +2,7 @@
 <ul>
   <li><%= @todo.title %></li>
   <li><%= @todo.body %></li>
-  <li><%= @list.todos.count %></li>
+  <li><%= @todo.status? %></li>
 </ul>
 
 <%= link_to "edit", edit_list_todo_path(@list, @todo) %>
